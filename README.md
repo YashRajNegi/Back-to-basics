@@ -2,19 +2,6 @@
 
 A web development project focusing on backend fundamentals.
 
-## Project Structure
-
-```
-backend/
-  ├── controllers/
-  │   └── userController.js
-  ├── routes/
-  │   └── userRoutes.js
-  ├── app.js
-  ├── index.js
-  └── package.json
-```
-
 ## Setup
 
 1. Navigate to the backend directory:
@@ -36,4 +23,3 @@ node index.js
 
 - Node.js
 - Express.js
-
