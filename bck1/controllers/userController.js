@@ -30,11 +30,57 @@ const createUser = (req,res) => {
 
     res.status(201).json({message: "User created successfully", user: newUser, success: true});
 
+}
 
+const updateUser = (req, res) => {
+    const { id } = req.params;
+    const { name, role } = req.body;
+
+    const userIndex = users.findIndex((user) => user.id === Number(id));
+
+    if (userIndex === -1) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        });
+    }
+
+    // Update user
+    if (name) users[userIndex].name = name;
+    if (role) users[userIndex].role = role;
+
+    res.status(200).json({
+        success: true,
+        message: "User updated successfully",
+        user: users[userIndex]
+    });
+}
+
+const deleteUser = (req, res) => {
+    const { id } = req.params;
+
+    const userIndex = users.findIndex((user) => user.id === Number(id));
+
+    if (userIndex === -1) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        });
+    }
+
+    // Remove user from array
+    users.splice(userIndex, 1);
+
+    res.status(200).json({
+        success: true,
+        message: "User deleted successfully"
+    });
 }
 
 module.exports = {
     getUsers,
     getUserById,
-    createUser
+    createUser,
+    updateUser,
+    deleteUser
 }
