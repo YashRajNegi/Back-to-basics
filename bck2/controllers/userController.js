@@ -1,72 +1,51 @@
-const User = require("../models/User");
+import User from "../models/User.js";
+import ErrorHandler from "../utils/errorHandler.js";
+import catchAsyncError from "../middlewares/catchAsyncError.js";
 
 const getUsers = async (req, res) => {
   const users = await User.find();
 
-  res.json({
-    success: true,
-    users,
-  });
+  res.status(200).json({ success: true, users });
 };
 
 const createUsers = async (req, res) => {
+  if (!req.body.name) {
+    throw new ErrorHandler("Name is required", 400);
+  }
+
   const user = await User.create(req.body);
 
-  res.json({
-    success: true,
-    user,
-  });
+  res.status(201).json({ success: true, user });
 };
 
 const updateUser = async (req, res) => {
-  const { id } = req.params; // url se id nikal rahe hai..
+  const user = await User.findById(req.params.id);
 
-  const user = await User.findById(id);
-
-  //Agar user nhi mila toh
   if (!user) {
-    return res.status(404).json({
-      success: false,
-      message: "User not found",
-    });
+    throw new ErrorHandler("User not found", 404);
   }
 
-  //user update
   user.name = req.body.name || user.name;
   user.role = req.body.role || user.role;
 
-  const updatedUser = await user.save();
+  await user.save();
+
+  res.status(200).json({ success: true, user });
+};
+
+const deleteUser = async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    throw new ErrorHandler("User not found", 404);
+  }
+
+  await user.deleteOne();
 
   res.status(200).json({
     success: true,
-    user: updatedUser,
+    message: "User deleted successfully",
   });
 };
 
-const deleteUser = async (req,res) => {
-    const {id} = req.params;
-    const user = await User.findById(id);
-
-    if(!user){
-        return res.status(404).json({
-            success : false,
-            message : "User not found"
-        })
-    }
-
-    await user.deleteOne();
-
-    res.status(200).json({
-        success: true,
-        message: "User deleted"
-    })
-}
-
-
-
-module.exports = {
-  getUsers,
-  createUsers,
-  updateUser,
-  deleteUser,
-};
+export { getUsers, createUsers, updateUser, deleteUser };
