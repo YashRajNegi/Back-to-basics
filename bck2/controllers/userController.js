@@ -2,23 +2,17 @@ import User from "../models/User.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import catchAsyncError from "../middlewares/catchAsyncError.js";
 
-const getUsers = async (req, res) => {
+export const getUsers = catchAsyncError(async (req, res) => {
   const users = await User.find();
-
   res.status(200).json({ success: true, users });
-};
+});
 
-const createUsers = async (req, res) => {
-  if (!req.body.name) {
-    throw new ErrorHandler("Name is required", 400);
-  }
-
+export const createUser = catchAsyncError(async (req, res) => {
   const user = await User.create(req.body);
-
   res.status(201).json({ success: true, user });
-};
+});
 
-const updateUser = async (req, res) => {
+export const updateUser = catchAsyncError(async (req, res) => {
   const user = await User.findById(req.params.id);
 
   if (!user) {
@@ -31,9 +25,9 @@ const updateUser = async (req, res) => {
   await user.save();
 
   res.status(200).json({ success: true, user });
-};
+});
 
-const deleteUser = async (req, res) => {
+export const deleteUser = catchAsyncError(async (req, res) => {
   const user = await User.findById(req.params.id);
 
   if (!user) {
@@ -46,6 +40,4 @@ const deleteUser = async (req, res) => {
     success: true,
     message: "User deleted successfully",
   });
-};
-
-export { getUsers, createUsers, updateUser, deleteUser };
+});

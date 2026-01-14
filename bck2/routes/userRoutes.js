@@ -1,20 +1,26 @@
-// express import
 import express from "express";
-
-// router create
 const router = express.Router();
 
-// controller functions import
-import {getUsers, createUsers, updateUser, deleteUser} from "../controllers/userController.js";
+import {
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "../controllers/userController.js";
 
+import {
+  createUserValidation,
+  userIdValidation,
+} from "../middlewares/userValidation.js";
+
+import validate from "../middlewares/validate.js";
 
 router.get("/", getUsers);
 
-router.post("/", createUsers);
+router.post("/", createUserValidation, validate, createUser);
 
-router.put("/:id",updateUser);
+router.put("/:id", userIdValidation, validate, updateUser);
 
-router.delete("/:id",deleteUser);
-
+router.delete("/:id", userIdValidation, validate, deleteUser);
 
 export default router;
