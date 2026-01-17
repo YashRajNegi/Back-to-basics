@@ -15,12 +15,15 @@ import {
 
 import validate from "../middlewares/validate.js";
 
-router.get("/", getUsers);
+import { isAuthenticatedUser } from "../middlewares/authMiddleware.js";
 
-router.post("/", createUserValidation, validate, createUser);
+router.get("/", isAuthenticatedUser, getUsers);
 
-router.put("/:id", userIdValidation, validate, updateUser);
+router.post("/", isAuthenticatedUser,createUserValidation, validate, createUser);
 
-router.delete("/:id", userIdValidation, validate, deleteUser);
+router.put("/:id", isAuthenticatedUser,userIdValidation, validate, updateUser);
+
+router.delete("/:id", isAuthenticatedUser,userIdValidation, validate, deleteUser);
 
 export default router;
+

@@ -32,12 +32,13 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// ✅ ASYNC pre-save hook (NO next)
+// pre("save") middleware
+// Matlab: database me save hone se pehle ye function chalega
 userSchema.pre("save", async function () {
   // agar password change nahi hua, kuch mat karo
   if (!this.isModified("password")) return;
 
-  // password hash
+  // change hua toh then convert bcrypt to hash
   this.password = await bcrypt.hash(this.password, 10);
 });
 
